@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content%}
+<div class="row" style="margin-top: 30px;">
+    <div class="col-lg-6">
+
+<div class="media">
+<img src="{{image_file}}" alt="" class="rounded-circle  account-img" style="height: 300px; width: 300px;">
+ </div>  
+</div>
+
+<div class="col-lg-6" style="margin-left: -200px;">
+<div class="media-body">
+
+    <ul class="list-group">
+        <li class="list-group-item"> <h1> <span style="color: deepskyblue;"> Account Username:  </span>  {{current_user.username}}  </h1></li>
+        <li class="list-group-item"><h3> <span style="color: deepskyblue;"> Account Email:  </span>   {{current_user.email}}   </h3> </li>
+
+
+    </ul>
+</div>
+</div>
+
+        
+</div>
+
+
+</div>
+
+{%endblock%}
