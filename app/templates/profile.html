@@ -4,27 +4,81 @@
 <div class="row" style="margin-top: 30px;">
     <div class="col-lg-6">
 
-<div class="media">
-<img src="{{image_file}}" alt="" class="rounded-circle  account-img" style="height: 300px; width: 300px;">
- </div>  
+        <div class="media">
+            <img src="{{image_file}}" alt="" class="rounded-circle  account-img" style="height: 400px; width: 400px;">
+        </div>
+    </div>
+
+    <div class="col-lg-6" style="margin-left: -100px;">
+        <div class="media-body">
+
+            <ul class="list-group">
+                <li class="list-group-item">
+                    <h4> <span style="color: deepskyblue;"> Account Username: </span> {{current_user.username}} </h4>
+                </li>
+                <li class="list-group-item">
+                    <h4> <span style="color: deepskyblue;"> Account Email: </span> {{current_user.email}} </h4>
+                </li>
+                <hr>
+
+            </ul>
+            <form action="" method="post" enctype="multipart/form-data" style="border-top:dimgray solid 1px;">
+                {{form.hidden_tag()}}
+                <fieldset class="form-group">
+                    <legend class="border-bottom-mb-4">Account Info</legend>
+                    <div class="form-group">
+                        {{form.username.label(class="form-control-label")}}
+                        {% if form.username.errors%}
+                        {{form.username(class="form-control form-control-lg is-invalid")}}
+                        <div class="invalid-feedback">
+                            {% for error in form.username.errors%}
+
+                            {{error}}
+                            {%endfor%}
+                        </div>
+                        {%else%}
+                        {{form.username(class="form-control form-control-lg")}}
+                        {% endif %}
+
+                    </div>
+                    <div class="form-group">
+                        {{form.email.label(class="form-control-label")}}
+                        {% if form.email.errors%}
+                        {{form.email(class="form-control form-control-lg is-invalid")}}
+                        <div class="invalid-feedback">
+                            {% for error in form.email.errors%}
+
+                            {{error}}
+                            {%endfor%}
+                        </div>
+                        {%else%}
+                        {{form.email(class="form-control form-control-lg")}}
+                        {% endif %}
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        {{form.submit(class="btn btn-primary")}}
+                    </div>
+                    <div class="form-group">
+                        {{form.picture.label()}}
+                        {{form.picture(class="form-control-file")}}
+                    </div>
+
+            </form>
+            </fieldset>
+
+        </div>
+    </div>
+
+
 </div>
 
-<div class="col-lg-6" style="margin-left: -200px;">
-<div class="media-body">
-
-    <ul class="list-group">
-        <li class="list-group-item"> <h1> <span style="color: deepskyblue;"> Account Username:  </span>  {{current_user.username}}  </h1></li>
-        <li class="list-group-item"><h3> <span style="color: deepskyblue;"> Account Email:  </span>   {{current_user.email}}   </h3> </li>
-
-
-    </ul>
-</div>
-</div>
-
-        
-</div>
-
 
 </div>
+
+
 
 {%endblock%}
