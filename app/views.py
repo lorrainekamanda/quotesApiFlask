@@ -1,6 +1,6 @@
 from app import app
-from flask import render_template,redirect,url_for,flash,request
-from app.forms import RegistrationForm,LoginForm
+from flask import render_template,redirect,url_for,flash,request,abort
+from app.forms import RegistrationForm,LoginForm,UpdateAccount,PostForm
 from app.model import User,Post
 from app import app,db,bcrypt
 from . import db
@@ -8,17 +8,26 @@ from flask_login import login_required,login_user,current_user,logout_user
 from flask import session
 import secrets
 from flask_bcrypt import Bcrypt
+import secrets
+import os
+from app import login_manager
 
-# @login_manager.user_loader
-# def load_user(user_id):
-#     return User.query.get(int(user_id))
-
-@app.route('/')
-@app.route('/home')
-def main():
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
 
 
-    return render_template('index.html')
+
+
+def upload_pic(save_picture):
+    random_hex = secrets.token_hex(8)
+    _,f_ext = os.path.splitext(save_picture.filename)
+
+    picture_name = random_hex + f_ext
+    load = os.path.join(app.root_path,'static/img',picture_name)
+
+    save_picture.save(load)
+    return picture_name
 
 @app.route('/register',methods =["POST","GET"])
 def register():
@@ -65,11 +74,82 @@ def logout():
     logout_user()
     return redirect(url_for('main'))
 
-@login_required
-@app.route('/profile')
+
+@app.route('/profile',methods =["POST","GET"])
 
 
 def profile():
-
+     form = UpdateAccount()
+     if form.validate_on_submit():
+         if form.picture.data:
+             picture_path = upload_pic(form.picture.data)
+             current_user.image_file = picture_path
+         current_user.username = form.username.data
+         current_user.email = form.email.data
+         db.session.commit()
+         flash('account updated','success')
+         return redirect(url_for('profile'))
+     elif request.method == 'GET':
+        #  user = User.query.filter_by()
+         form.username.data = current_user.username
+         form.email.data = current_user.email
      image_file = url_for('static',filename = 'img/'+ current_user.image_file)
-     return render_template('profile.html',image_file=image_file)
+     return render_template('profile.html',image_file=image_file,form=form)
+
+@app.route('/post/form',methods =["POST","GET"])
+@login_required
+
+def post():
+    form = PostForm()
+    if form.validate_on_submit():
+        title = form.title.data
+        content = form.content.data
+        
+        post = Post(title = title,content=content,rel = current_user)
+        db.session.add(post)
+        db.session.commit()
+        flash('posted','success')
+        return redirect(url_for('main'))
+    return render_template('post.html',form = form,rel = current_user)
+
+@app.route('/')
+@app.route('/home')
+def main():
+    posts = Post.query.all()
+    
+    
+    return render_template('index.html',posts=posts)
+
+
+@app.route('/post<int:post_id>')
+
+@login_required
+
+def change(post_id):
+
+    post = Post.query.get(post_id)
+
+    return render_template('change.html',post = post)
+
+@app.route('/post<int:post_id>/update',methods =["POST","GET"])
+
+@login_required
+
+def update_post(post_id):
+    
+    post = Post.query.get(post_id)
+    if post.rel != current_user:
+        flash('you cannot update this post','danger')
+        abort(403)
+    form = PostForm()
+    if form.validate_on_submit():
+            post.title = form.title.data
+            post.content = form.content.data
+            db.session.commit()
+            flash('post updated','sucess')
+            return redirect(url_for('main'))
+    elif request.method =='GET':
+            form.title.data = post.title
+            form.content.data = post.content
+            
+    return render_template('update.html',post = post,form=form)
