@@ -1,79 +1,87 @@
 {% extends 'base.html' %}
 {% block content %}
 
+<div class="row">
+
+  <div class="col-lg-5"  style="margin-left: 60px;">
+
 <div class="content-section">
 
-    <form action="" method="post">
-      {{form.hidden_tag()}}
+  <form action="" method="post">
+    {{form.hidden_tag()}}
 
-      <fieldset class="form-group">
-        <legend class="border-bottom-mb-4">Register Now</legend>
-          <div class="form-group">
-               {{form.username.label(class="form-control-label")}}
-               {% if form.username.errors%}
-               {{form.username(class="form-control form-control-lg is-invalid")}}
-               <div class="invalid-feedback">
-               {% for error in form.username.errors%}
+    <fieldset class="form-group">
+      <legend class="border-bottom-mb-4">Register Now</legend>
+      <div class="form-group">
+        {{form.username.label(class="form-control-label")}}
+        {% if form.username.errors%}
+        {{form.username(class="form-control form-control-lg is-invalid")}}
+        <div class="invalid-feedback">
+          {% for error in form.username.errors%}
 
-                 {{error}}
-                 {%endfor%}
-               </div>
-               {%else%}
-               {{form.username(class="form-control form-control-lg")}}
-               {% endif %}
-               
-         </div>
-         <div class="form-group">
-            {{form.email.label(class="form-control-label")}}
-            {% if form.email.errors%}
-            {{form.email(class="form-control form-control-lg is-invalid")}}
-               <div class="invalid-feedback">
-               {% for error in form.email.errors%}
+          {{error}}
+          {%endfor%}
+        </div>
+        {%else%}
+        {{form.username(class="form-control form-control-lg")}}
+        {% endif %}
 
-                 {{error}}
-                 {%endfor%}
-               </div>
-               {%else%}
-               {{form.email(class="form-control form-control-lg")}}
-               {% endif %}
-            
+      </div>
+      <div class="form-group">
+        {{form.email.label(class="form-control-label")}}
+        {% if form.email.errors%}
+        {{form.email(class="form-control form-control-lg is-invalid")}}
+        <div class="invalid-feedback">
+          {% for error in form.email.errors%}
+
+          {{error}}
+          {%endfor%}
+        </div>
+        {%else%}
+        {{form.email(class="form-control form-control-lg")}}
+        {% endif %}
+
       </div>
       <div class="form-group">
         {{form.password.label(class="form-control-label")}}
         {{form.password(class="form-control form-control-lg")}}
-  </div>
-  <div class="form-group">
-    {{form.confirm_password.label(class="form-control-label")}}
-    {% if form.confirm_password.errors%}
-    {{form.confirm_password(class="form-control form-control-lg is-invalid")}}
-    <div class="invalid-feedback">
-      {% for error in form.confirm_password.errors%}
-
-        {{error}}
-        {%endfor%}
       </div>
-      {%else%}
-      {{form.confirm_password(class="form-control form-control-lg")}}
-      {% endif %}
+      <div class="form-group">
+        {{form.confirm_password.label(class="form-control-label")}}
+        {% if form.confirm_password.errors%}
+        {{form.confirm_password(class="form-control form-control-lg is-invalid")}}
+        <div class="invalid-feedback">
+          {% for error in form.confirm_password.errors%}
 
-   
+          {{error}}
+          {%endfor%}
+        </div>
+        {%else%}
+        {{form.confirm_password(class="form-control form-control-lg")}}
+        {% endif %}
+
+
+      </div>
+      <div class="form-group">
+
+        {{form.submit(class="btn btn-primary")}}
+      </div>
+
+
+    </fieldset>
+
+  </form>
 </div>
-<div class="form-group">
-    
-    {{form.submit(class="btn btn-primary")}}
+<p class="text-muted">
+
+  <a href="{{url_for('login')}}"> Already have an account?</a>
+</p>
 </div>
 
+<div class="col-lg-6  login" style="margin-top: 50px;margin-left: 45px;">
+  
+  <img div = "login" src="{{url_for('static', filename = 'img/reg.jpeg')}}" alt="">
 
-      </fieldset>
-
-    </form>
 </div>
-   <p class="text-muted">
-
-    <a href="{{url_for('login')}}"> Already have an account?</a>
-   </p>
-
-
-
 
 {% endblock %}
