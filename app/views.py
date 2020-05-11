@@ -1,7 +1,7 @@
 from app import app
 from flask import render_template,redirect,url_for,flash,request,abort
 from app.forms import RegistrationForm,LoginForm,UpdateAccount,PostForm,CommentForm
-from app.model import User,Post
+from app.model import User,Post,Comment
 from app import app,db,bcrypt
 from . import db
 from flask_login import login_required,login_user,current_user,logout_user
@@ -11,7 +11,8 @@ from flask_bcrypt import Bcrypt
 import secrets
 import os
 from app import login_manager
-
+from app.requests import quotes
+import urllib.request,json
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -117,37 +118,34 @@ def post():
 @app.route('/home')
 def main():
     posts = Post.query.all()
+ 
+    data =quotes ()
     
-    
-    return render_template('index.html',posts=posts)
+    return render_template('index.html',posts=posts,data=data)
 
 
-@app.route('/post<int:post_id>')
+@app.route('/post<int:post_id>',methods =["POST","GET"])
 
 @login_required
 
 def change(post_id):
 
     post = Post.query.get(post_id)
-    comments  = Post.query.all()
-    return render_template('change.html',post = post,comments = comments)
-
-
-
-@app.route('/post<int:post_id>/comment')
-
-@login_required
-
-def comment(post_id):
-    post = Post.query.get(post_id)
+    comments = Comment.query.filter_by(post_id = post.id)
     form = CommentForm()
     if form.validate_on_submit():
-        comment = form.comments.data
-        saved = Post(comment = comment)
-        db.session.add(saved)
+        name= form.name.data
+        comment = Comment(name = name,post_id = post.id)
+        db.session.add(comment)
         db.session.commit()
-        return redirect(url_for('change'))
-    return render_template('comment.html',post = post,form = form)
+        
+        return redirect(url_for('main'))
+
+
+    return render_template('change.html',post = post,comments = comments,form =form)
+
+
+
 
 
 
@@ -191,26 +189,25 @@ def delete_post(post_id):
     flash('Post deleted','success')
     return redirect(url_for('main'))
 
-@app.route("/message")
-def index():
-   msg = Message('The Next Big Thing', sender = 'lorrainekamanda@gmail.com', recipients = ['lorrainekamanda@gmail.com'])
-   msg.body = "Hello and Welcome to The Blog Thing where you get The to View Amazing Ideas "
-   mail.send(msg)
-   return render_template('index.html')
+@app.route('/comment<int:comment_id>/delete',methods =["POST","GET"])
 
-@app.route('/',methods =["POST","GET"])
+@login_required
 
-def request_json():
-    # response = requests.get('http://quotes.stormconsultancy.co.uk/random.json')
-    # response_json = jsonify(all=response.text)
-    # response = json.dumps(response.text, sort_keys = False, indent = 2)
-    # return r.json('author','quote','permalink')
+def delete_comment(comment_id):
+    comment= Comment.query.get(comment_id)
+   
+    db.session.delete(comment)
+    db.session.commit()
+    flash('Comment deleted','success')
+    return render_template('change.html')
 
-    url = 'http://quotes.stormconsultancy.co.uk/random.json'
-    response = requests.get(url)
-    data = response.json()
-    b = json.dumps(data)
-    return render_template('index.html', data=data,b=b)
+
+
+
+
+
+
+
     
 
 
