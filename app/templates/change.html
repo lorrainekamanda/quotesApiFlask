@@ -12,8 +12,9 @@
     {%endif%} -->
 
 
+<div class="row">
 
-
+    <div class="col-lg-6">
 
 
 <article class="media content-section" style="margin-top: 20px;">
@@ -26,7 +27,7 @@
 <h2 class="article-title">{{post.title}}</h2>
 <p class="article-content">{{post.content}}</p>
 <small> <a href="http://" class="mr-2"> {{post.rel.username}}</a>  </small>
-<small class="text-muted"> posted on {{post.date.strftime('-%c')}}</small>
+<small class="text-muted"> posted on {{post.date.strftime('%B %d,%Y')}}</small>
 
 
 </div>
@@ -41,7 +42,82 @@
 <button class="btn btn-danger btn-sm" style="margin-left: 100px; margin-top: 10px;"> <a href="{{url_for('delete_post',post_id = post.id)}}" style="color: white;">   Delete</a></button>
 {%endif%}
 
+<article class="media content-section" style="margin-top: 20px;">
+    <img src="{{url_for('static',filename = 'img/' + post.rel.image_file)}}" alt="" srcset="" class="rounded-circle" style="height: 100px;width: 100px;">
+    <div class="media-body">
+    <div class="article-metadata"><br><br>
+    
+    
 
+  <h4>Comments</h4>
+  <hr>
+    {%for comment in comments%}
+   
+    <p class="article-content">{{comment.name}}</p>
+    <small class="article-content">posted on;{{comment.date.strftime('%B %d,%Y')}}</small>
+    
+<button class="btn btn-danger btn-sm" style="margin-left: 100px; margin-top: 10px;"> <a href="{{url_for('delete_comment',comment_id = comment.id)}}" style="color: white;">   Delete</a></button>
+    <hr>
+    {%endfor%}
+    
+    </div>
+    
+    </div>
+    
+    
+    </article>
+    
+   
+
+
+
+
+
+</div>
+
+<div class="col-lg-4">
+
+<div class="content-section">
+
+    <form action="" method="post">
+        {{form.hidden_tag()}}
+
+        <fieldset class="form-group">
+            <legend class="border-bottom-mb-4"> Add Comment</legend>
+
+           
+                
+            <div class="form-group">
+                
+                {% if form.name.errors%}
+                {{form.name(class="form-control form-control-lg is-invalid")}}
+                <div class="invalid-feedback">
+                    {% for error in form.name.errors%}
+
+                    {{error}}
+                    {%endfor%}
+                </div>
+                {%else%}
+                {{form.name(class="form-control form-control-lg")}}
+                {% endif %}
+
+            </div>
+
+
+
+            <div class="form-group">
+
+                {{form.submit(class="btn btn-outline-primary")}}
+            </div>
+
+
+        </fieldset>
+
+    </form>
+</div>
+</div>
+
+</div>
     {% endblock %}
 
 
