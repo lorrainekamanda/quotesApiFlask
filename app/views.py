@@ -1,6 +1,6 @@
 from app import app
 from flask import render_template,redirect,url_for,flash,request,abort
-from app.forms import RegistrationForm,LoginForm,UpdateAccount,PostForm
+from app.forms import RegistrationForm,LoginForm,UpdateAccount,PostForm,CommentForm
 from app.model import User,Post
 from app import app,db,bcrypt
 from . import db
@@ -11,6 +11,7 @@ from flask_bcrypt import Bcrypt
 import secrets
 import os
 from app import login_manager
+
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -128,8 +129,29 @@ def main():
 def change(post_id):
 
     post = Post.query.get(post_id)
+    comments  = Post.query.all()
+    return render_template('change.html',post = post,comments = comments)
 
-    return render_template('change.html',post = post)
+
+
+@app.route('/post<int:post_id>/comment')
+
+@login_required
+
+def comment(post_id):
+    post = Post.query.get(post_id)
+    form = CommentForm()
+    if form.validate_on_submit():
+        comment = form.comments.data
+        saved = Post(comment = comment)
+        db.session.add(saved)
+        db.session.commit()
+        return redirect(url_for('change'))
+    return render_template('comment.html',post = post,form = form)
+
+
+
+
 
 @app.route('/post<int:post_id>/update',methods =["POST","GET"])
 
@@ -153,3 +175,43 @@ def update_post(post_id):
             form.content.data = post.content
             
     return render_template('update.html',post = post,form=form)
+
+@app.route('/post<int:post_id>/delete',methods =["POST","GET"])
+
+@login_required
+
+def delete_post(post_id):
+    
+    post = Post.query.get(post_id)
+    if post.rel != current_user:
+        flash('you cannot delete this post','danger')
+        abort(403)
+    db.session.delete(post)
+    db.session.commit()
+    flash('Post deleted','success')
+    return redirect(url_for('main'))
+
+@app.route("/message")
+def index():
+   msg = Message('The Next Big Thing', sender = 'lorrainekamanda@gmail.com', recipients = ['lorrainekamanda@gmail.com'])
+   msg.body = "Hello and Welcome to The Blog Thing where you get The to View Amazing Ideas "
+   mail.send(msg)
+   return render_template('index.html')
+
+@app.route('/',methods =["POST","GET"])
+
+def request_json():
+    # response = requests.get('http://quotes.stormconsultancy.co.uk/random.json')
+    # response_json = jsonify(all=response.text)
+    # response = json.dumps(response.text, sort_keys = False, indent = 2)
+    # return r.json('author','quote','permalink')
+
+    url = 'http://quotes.stormconsultancy.co.uk/random.json'
+    response = requests.get(url)
+    data = response.json()
+    b = json.dumps(data)
+    return render_template('index.html', data=data,b=b)
+    
+
+
+    

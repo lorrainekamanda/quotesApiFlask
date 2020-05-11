@@ -1,19 +1,57 @@
 {% extends 'base.html' %}
+<link rel="stylesheet" href="{{url_for('static' ,filename='css/style.css')}}">
 
-{%block title %}
-<h1><a href="{{url_for('register')}}">Register</a></h1>
 
-{%endblock%}
-{% block content %}
-    {% for post in posts %}
+
+<div class="row  row1">
+
+    <h1 style="font-size: 95px; color: white;margin-bottom: 20px;margin-left: 100px;"> THE BLOG.</h1>
+
    
-   <h1> {{post.title}}  </h1> 
-<h1> {{post.content}}  </h1>
-    
+    <p style="color: black;"> {{author}} </p> 
+    <p style="color: black;"> {{quote}} </p> 
+    <pre style="color:red;"> {{response}} </pre> 
+    <pre style="color:red;"> {{data}} </pre> 
+     <h1>{{b}}</h1>
 
-    {% endfor %}
+    <!-- {% if current_user.is_authenticated%}
+    <h1 style="color: white;"> Hello {{current_user.username}}</h1>
 
-    {% endblock %}
+    {%endif%} -->
+
+</div>
+{% block content %}
+
+{% for post in posts%}
+
+<article class="media content-section" style="margin-top: 20px;">
+    <img src="{{url_for('static',filename = 'img/' + post.rel.image_file)}}" alt="" srcset="" class="rounded-circle"
+        style="height: 100px;width: 100px;">
+    <div class="media-body">
+        <div class="article-metadata">
 
 
-  
+
+            <h2 class="article-title"><a href="{{url_for('change',post_id = post.id)}}">{{post.title}} </a></h2>
+            <p class="article-content">{{post.content}}</p>
+            <small  > <a href="{{url_for('change',post_id = post.id)}}"> View More </a>  </small><br> 
+            <small> <a href="http://" class="mr-2"> {{post.rel.username}}</a> </small>
+            <small class="text-muted"> posted on {{post.date.strftime('%B %d,%Y')}}</small>
+           
+        <p> {{author}} </p> 
+
+
+        </div>
+
+    </div>
+
+
+</article>
+
+
+
+{% endfor %}
+
+
+
+{% endblock %}

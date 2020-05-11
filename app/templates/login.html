@@ -1,6 +1,8 @@
 {% extends 'base.html' %}
 {% block content %}
-
+<link rel="stylesheet" href="{{url_for('static' ,filename='css/style.css')}}">
+<div class="row">
+<div class="col-lg-4" style="margin-left: 100px;">
 <div class="content-section">
 
     <form action="" method="post">
@@ -49,7 +51,12 @@
 
     <a href="{{url_for('register')}}"> Don't have an account <a>
    </p>
-
+  </div>
+  <div class="col-lg-6  login" style="margin-top: 20px;">
+  
+<img div = "login" src="{{url_for('static', filename = 'img/login.jpeg')}}" alt="" style="height: 300px; width: 500px;">
+  </div>
+  </div>
 
 
 
