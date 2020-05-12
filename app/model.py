@@ -28,9 +28,19 @@ class Post(db.Model):
     title = db.Column(db.String(20))
     content= db.Column(db.Text(120))
     date = db.Column(db.DateTime , default = datetime.utcnow)
-    comments= db.Column(db.Text(120))
     user_id = db.Column(db.Integer,db.ForeignKey('user.id'))
     
     def __repr__(self):
-        return f"Post('{self.title}' ,'{self.content}', '{self.date}','{self.comments}')"
+        return f"Post('{self.title}' ,'{self.content}', '{self.date}')"
 
+class Comment(db.Model):
+    id = db.Column(db.Integer,primary_key = True)
+    username = db.Column(db.String(320))
+    email = db.Column(db.String(120))
+    date = db.Column(db.DateTime , default = datetime.utcnow)
+    name= db.Column(db.Text(120))
+    post_id = db.Column(db.Integer,db.ForeignKey('post.id'))
+    post = db.relationship('Post',backref = 'post')
+    
+    def __repr__(self):
+        return f"Post('{self.name}', '{self.date}')"

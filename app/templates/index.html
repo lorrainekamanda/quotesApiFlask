@@ -33,10 +33,11 @@
 
             
             <h2 class="article-title"><a href="{{url_for('change',post_id = post.id)}}">{{post.title}} </a></h2>
+            <small class="text-muted"> posted on {{post.date.strftime('%B %d,%Y')}}</small>
             <p class="article-content">{{post.content}}</p>
             <small  > <a href="{{url_for('change',post_id = post.id)}}"> Comment </a>  </small><br> 
             <small> <a href="http://" class="mr-2"> {{post.rel.username}}</a> </small>
-            <small class="text-muted"> posted on {{post.date.strftime('%B %d,%Y')}}</small>
+            
            
     
 
@@ -56,7 +57,7 @@
 <div class="col-lg-6">
 <img src="{{url_for('static',filename = 'img/blog.jpg')}}" alt="" srcset="">
 <hr>
-<a href="{{url_for('registration')}}  ">  <img src="{{url_for('static',filename = 'img/sub.jpeg')}}" alt="" srcset="" style="height: 150px; width: 250px;">  </a><br>
+<a href="{{url_for('register')}}  ">  <img src="{{url_for('static',filename = 'img/sub.jpeg')}}" alt="" srcset="" style="height: 150px; width: 250px;">  </a><br>
 <hr>
 <img src="{{url_for('static',filename = 'img/twitter.jpeg')}}" alt="" srcset="" style="height: 150px; width: 250px;"><br>
 <hr>

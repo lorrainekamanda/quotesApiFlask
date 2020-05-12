@@ -55,8 +55,8 @@
    
     <p class="article-content">{{comment.name}}</p>
     <small class="article-content">posted on;{{comment.date.strftime('%B %d,%Y')}}</small>
-    
-<button class="btn btn-danger btn-sm" style="margin-left: 100px; margin-top: 10px;"> <a href="{{url_for('delete_comment',comment_id = comment.id)}}" style="color: white;">   Delete</a></button>
+    <button class="btn btn-primary btn-sm" style="margin-left: 100px; margin-top: 10px;"> <a href="{{url_for('update_comment',post_id = post.id,comment_id = comment.id)}}" style="color: white;"> update</a></button>   
+<button class="btn btn-danger btn-sm" style="margin-left: 100px; margin-top: 10px;"> <a href="{{url_for('delete_comment',post_id = post.id,comment_id = comment.id)}}" style="color: white;">   Delete</a></button>
     <hr>
     {%endfor%}
     

@@ -139,7 +139,7 @@ def change(post_id):
         db.session.add(comment)
         db.session.commit()
         
-        return redirect(url_for('main'))
+        return redirect(url_for('change',post_id = post.id))
 
 
     return render_template('change.html',post = post,comments = comments,form =form)
@@ -167,12 +167,36 @@ def update_post(post_id):
             post.content = form.content.data
             db.session.commit()
             flash('post updated','sucess')
-            return redirect(url_for('main'))
+            return redirect(url_for('change',post_id = post.id))
     elif request.method =='GET':
             form.title.data = post.title
             form.content.data = post.content
             
     return render_template('update.html',post = post,form=form)
+
+@app.route('/post<int:post_id>/comment/<int:comment_id>update',methods =["POST","GET"])
+
+@login_required
+
+def update_comment(post_id,comment_id):
+    
+    
+       
+    form = CommentForm()
+    post = Post.query.get(post_id)
+    comment= Comment.query.get(comment_id)
+    if form.validate_on_submit():
+            post = Post.query.get(post_id)
+            comment= Comment.query.get(comment_id)
+            comment.name = form.name.data
+            db.session.commit()
+            flash('comment updated','sucess')
+            return redirect(url_for('change',post_id = post.id,comment_id = comment.id))
+    elif request.method =='GET':
+            form.name.data = comment.name
+            
+            
+    return render_template('comment.html',form=form,post=post,comment=comment)  
 
 @app.route('/post<int:post_id>/delete',methods =["POST","GET"])
 
@@ -187,20 +211,21 @@ def delete_post(post_id):
     db.session.delete(post)
     db.session.commit()
     flash('Post deleted','success')
-    return redirect(url_for('main'))
+    return redirect(url_for('change',post_id = post.id))
 
-@app.route('/comment<int:comment_id>/delete',methods =["POST","GET"])
+@app.route('/post<int:post_id>/comment/<int:comment_id>delete',methods =["POST","GET"])
 
 @login_required
 
-def delete_comment(comment_id):
+def delete_comment(post_id,comment_id):
     comment= Comment.query.get(comment_id)
-   
+    post = Post.query.get(post_id)
     db.session.delete(comment)
     db.session.commit()
     flash('Comment deleted','success')
-    return render_template('change.html')
-
+    return redirect(url_for('change',post_id=post.id,comment_id=comment.id))
+    
+ 
 
 
 
