@@ -211,7 +211,7 @@ def delete_post(post_id):
     db.session.delete(post)
     db.session.commit()
     flash('Post deleted','success')
-    return redirect(url_for('change',post_id = post.id))
+    return redirect(url_for('main'))
 
 @app.route('/post<int:post_id>/comment/<int:comment_id>delete',methods =["POST","GET"])
 
